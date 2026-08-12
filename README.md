@@ -3,6 +3,11 @@
 This repository publishes findings from Microsoft Security's Frontier
 Offensive Research & Generative Exploitation (FORGE) Lab.
 
+## Status
+
+The CVE list is maintained as a cumulative dataset and updated as findings are
+cleared for public disclosure.
+
 ## CVE list
 
 The machine-readable CVE list is available in
