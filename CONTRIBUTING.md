@@ -12,6 +12,11 @@ you need to provide a CLA and decorate the pull request appropriately. Follow
 the instructions provided by the bot. You will only need to do this once
 across all repositories using the Microsoft CLA.
 
+Code contributions are licensed under the
+[MIT License](./LICENSE-CODE). Documentation and other written content are
+licensed under the
+[Creative Commons Attribution 4.0 International License](./LICENSE).
+
 Before submitting a change:
 
 - Include only CVE identifiers cleared for public disclosure.
