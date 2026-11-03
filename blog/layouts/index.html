@@ -1,0 +1,109 @@
+{{ define "main" }}
+<section class="intro" aria-labelledby="intro-title">
+  <div class="intro-copy">
+    <p class="eyebrow">Research journal</p>
+    <h1 id="intro-title">A closer look<br>at what's <span class="forged-word"><span class="forged-accent">FORGE</span>d.</span></h1>
+    <p class="lede">Notes from Microsoft's Frontier Offensive Research &amp;
+      Generative Exploitation Lab.</p>
+  </div>
+  {{ $artwork := resources.Get "images/goryeo-forge-cutout.png" }}
+  {{ $small := $artwork.Resize "880x webp q85" }}
+  {{ $large := $artwork.Resize "1536x webp q85" }}
+  <figure class="hero-artwork">
+    <div class="hero-artwork-frame" data-ink-landscape>
+      <div class="forge-canvas">
+      <img
+        class="forge-original"
+        src="{{ $small.RelPermalink }}"
+        srcset="{{ $small.RelPermalink }} {{ $small.Width }}w, {{ $large.RelPermalink }} {{ $large.Width }}w"
+        sizes="(max-width: 600px) calc(135vw - 64.8px), (max-width: 760px) calc(135vw - 108px), (max-width: 960px) calc(67.5vw - 81px), 567px"
+        width="{{ $large.Width }}"
+        height="{{ $large.Height }}"
+        alt="Goryeo-inspired ink-and-wash illustration of an artisan forging glowing metal beside a charcoal hearth."
+        fetchpriority="high"
+      >
+      <div class="forge-scene" aria-hidden="true">
+        {{ range slice
+          (dict "name" "paper" "depth" "0" "turn" "0" "origin" "50% 50%" "ease" "180")
+          (dict "name" "smoke" "depth" "20" "turn" "-4" "origin" "80% 60%" "ease" "560")
+          (dict "name" "hearth" "depth" "2" "turn" "0" "origin" "80% 70%" "ease" "200")
+          (dict "name" "foreground" "depth" "4" "turn" "0.2" "origin" "52% 85%" "ease" "160")
+        }}
+          {{ $layer := resources.Get (printf "images/forge-cutout-layers/%s.webp" .name) | fingerprint }}
+          <img class="forge-piece forge-piece-{{ .name }}"
+            src="{{ $layer.RelPermalink }}" width="1536" height="1024" alt=""
+            data-depth="{{ .depth }}" data-turn="{{ .turn }}" data-ease="{{ .ease }}"
+            style="transform-origin: {{ .origin | safeCSS }}" draggable="false">
+        {{ end }}
+        <div class="forge-rig" data-depth="3" data-turn="0.4" data-ease="220" style="transform-origin: 39% 70%">
+          {{ range slice
+            (dict "name" "artisan" "turn" "0")
+            (dict "name" "hammer-underpaint" "turn" "0")
+            (dict "name" "hammer" "turn" "24")
+          }}
+            {{ $layer := resources.Get (printf "images/forge-cutout-layers/%s.webp" .name) | fingerprint }}
+            <img class="forge-piece forge-piece-{{ .name }}"
+              src="{{ $layer.RelPermalink }}" width="1536" height="1024" alt=""
+              data-depth="0" data-turn="{{ .turn }}" data-ease="95"
+              style="transform-origin: 36.85% 53.5%" draggable="false">
+          {{ end }}
+        </div>
+      </div>
+      <svg class="forge-layers" viewBox="0 0 1536 1024" aria-hidden="true">
+        <defs>
+          <radialGradient id="forge-heat">
+            <stop stop-color="#f8b25b" stop-opacity=".5"/>
+            <stop offset="1" stop-color="#df7134" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="forge-flame-wash" x1="0" y1="1" x2="0" y2="0">
+            <stop stop-color="#f8d28a" stop-opacity=".85"/>
+            <stop offset=".45" stop-color="#e99445" stop-opacity=".7"/>
+            <stop offset="1" stop-color="#b35c34" stop-opacity=".15"/>
+          </linearGradient>
+        </defs>
+        <g data-depth="2">
+          <g class="forge-heat">
+            <ellipse cx="756" cy="671" rx="84" ry="28" fill="url(#forge-heat)"/>
+            <ellipse cx="1223" cy="643" rx="96" ry="45" fill="url(#forge-heat)"/>
+          </g>
+          <g class="forge-flames" fill="url(#forge-flame-wash)">
+            <path class="forge-flame" d="M1178 652c-15-13-3-24 0-33s-3-15-2-22c18 14 8 23 14 32s11 16 6 24Z" style="transform-origin: 1187px 652px"/>
+            <path class="forge-flame" d="M1202 653c-15-23 19-28 7-59 25 21 3 33 15 43 3-7 9-10 10-19 13 22 3 31-4 37Z" style="transform-origin: 1217px 653px"/>
+            <path class="forge-flame" d="M1240 652c-8-16 17-22 9-42 23 19 1 31 16 42Z" style="transform-origin: 1252px 652px"/>
+          </g>
+        </g>
+        <g data-depth="24" data-drift="-1.2">
+          <g class="forge-smoke" fill="none" stroke="#847e70" stroke-linecap="round">
+            <path d="M1242 560c-24-33 33-49 14-83s-25-37-4-67" stroke-width="7" opacity=".14"/>
+            <path d="M1262 551c19-33-10-47 8-77s26-35 16-59" stroke-width="4" opacity=".12"/>
+          </g>
+        </g>
+        <g data-depth="32" data-drift="-1.5">
+          <g class="forge-sparks" fill="#c96f35">
+            <circle cx="776" cy="633" r="3" opacity=".75"/>
+            <circle cx="802" cy="611" r="2.5" opacity=".65"/>
+            <circle cx="828" cy="586" r="2" opacity=".6"/>
+            <circle cx="734" cy="621" r="2" opacity=".55"/>
+            <circle cx="1195" cy="604" r="2.5" opacity=".65"/>
+            <circle cx="1239" cy="586" r="2" opacity=".6"/>
+          </g>
+        </g>
+        <g data-depth="4" data-turn="0.2" data-ease="160" style="transform-origin: 52% 85%">
+          <ellipse class="forge-strike-flash" cx="756" cy="671" rx="76" ry="35" fill="url(#forge-heat)"/>
+          <g class="forge-burst" stroke-linecap="round"></g>
+        </g>
+      </svg>
+      </div>
+    </div>
+  </figure>
+</section>
+<section class="writing" aria-labelledby="writing-title">
+  <div class="section-heading">
+    <h2 id="writing-title">Latest writing</h2>
+    <span class="eyebrow">Ideas &amp; findings</span>
+  </div>
+  {{ partial "post-list.html" (where site.RegularPages "Section" "posts") }}
+</section>
+{{ $motion := resources.Get "js/ink-landscape.js" | minify | fingerprint }}
+<script src="{{ $motion.RelPermalink }}" integrity="{{ $motion.Data.Integrity }}" defer></script>
+{{ end }}

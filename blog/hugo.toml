@@ -1,0 +1,11 @@
+baseURL = "https://forge-blog.github.io/"
+locale = "en-us"
+title = "FORGE Lab"
+disableKinds = ["taxonomy", "term"]
+enableRobotsTXT = true
+
+[params]
+description = "Research notes from Microsoft's Frontier Offensive Research & Generative Exploitation Lab."
+
+[permalinks]
+posts = "/posts/:slug/"

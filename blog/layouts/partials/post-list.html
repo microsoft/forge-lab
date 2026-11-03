@@ -1,0 +1,13 @@
+<ul class="post-list">
+  {{ range .ByDate.Reverse }}
+  <li>
+    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+    <div>
+      <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      {{ with .Description }}<p>{{ . }}</p>{{ end }}
+    </div>
+  </li>
+  {{ else }}
+  <li><p>Research notes are on the way.</p></li>
+  {{ end }}
+</ul>

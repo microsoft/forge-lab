@@ -1,0 +1,13 @@
+{{ define "main" }}
+<article class="post">
+  <header class="page-heading">
+    <a class="back-link" href="{{ "posts/" | relURL }}">← All writing</a>
+    <h1>{{ .Title }}</h1>
+    <p class="post-meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+      <span aria-hidden="true"> / </span>{{ .ReadingTime }} min read
+    </p>
+  </header>
+  <div class="prose">{{ .Content }}</div>
+</article>
+{{ end }}

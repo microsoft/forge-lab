@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="{{ site.Language.Locale }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ if not .IsHome }}{{ .Title }} · {{ end }}{{ site.Title }}</title>
+    <meta name="description" content="{{ .Description | default site.Params.description }}">
+    <link rel="canonical" href="{{ .Permalink }}">
+    {{ with site.Home.OutputFormats.Get "RSS" }}
+    <link rel="alternate" type="application/rss+xml" title="{{ site.Title }}" href="{{ .Permalink }}">
+    {{ end }}
+    {{ $style := resources.Get "css/main.css" | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="site">
+      <header class="site-header">
+        <a class="wordmark" href="{{ "" | relURL }}" aria-label="FORGE Lab home">FORGE<span> Lab</span></a>
+        <nav aria-label="Main navigation">
+          <a href="{{ "posts/" | relURL }}"{{ if eq .Section "posts" }} aria-current="page"{{ end }}>Writing</a>
+          <a href="https://github.com/microsoft/forge-lab/blob/main/cve/cve.json" aria-label="View CVE data on GitHub">CVE</a>
+          <a href="https://github.com/microsoft/forge-lab">GitHub <span aria-hidden="true">↗</span></a>
+        </nav>
+      </header>
+      <main id="main">
+        {{ block "main" . }}{{ end }}
+      </main>
+      <footer class="site-footer">
+        <span>FORGE Lab <span aria-hidden="true">·</span> Microsoft Security</span>
+        <div>
+          <a href="https://github.com/microsoft/forge-lab/blob/main/LICENSE">CC BY 4.0</a>
+          {{ with site.Home.OutputFormats.Get "RSS" }}<a href="{{ .RelPermalink }}">RSS</a>{{ end }}
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
