@@ -45,9 +45,9 @@ Some of the bugs in this post were found with help from Hyenas, our research ver
 
 This post focuses on soundness bugs in the standard library's unsafe code. Bugs in the compiler itself, such as miscompilations and holes in the type system, are a different topic that we don't cover here.
 
-## A note on open issues
+{{< note >}}
 
-Some of the issues in this post are still open at the time of writing. The Rust
+**A note on open issues.** Some of the issues in this post are still open at the time of writing. The Rust
 maintainers triaged and responded to our reports quickly, and we believe maintainers
 and the contributors working on these issues are doing their best and making
 the right tradeoffs among the many bugs they handle.
@@ -55,6 +55,8 @@ the right tradeoffs among the many bugs they handle.
 If you're interested in an open issue, please comment only when you have
 something genuinely new to contribute, such as new information or an affected
 real-world use case.
+
+{{< /note >}}
 
 ## Patterns of Rust's Safety Bugs
 
