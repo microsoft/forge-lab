@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" role="img" aria-labelledby="title desc">
+  <title id="title">An unwinding panic exposes a temporarily broken invariant</title>
+  <desc id="desc">On the normal path, a function breaks an invariant, calls code that may panic, restores the invariant, and returns. If that call panics, unwinding skips the restore step and runs Buffer::drop on uninitialized slots, which is undefined behavior.</desc>
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .title { font-size: 19px; font-weight: 600; fill: #292b28; }
+      .sub { font-size: 16px; fill: #65665e; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .ub { font-size: 18px; font-weight: 600; fill: #98482e; }
+      .label { font-size: 14px; font-weight: 600; fill: #98482e; letter-spacing: 0.02em; }
+      .node { fill: #fbfaf7; stroke: #292b28; stroke-width: 1.5; }
+      .bad { fill: #f4e9e3; stroke: #98482e; stroke-width: 1.5; }
+      .flow { stroke: #292b28; stroke-width: 1.5; fill: none; }
+      .panic { stroke: #98482e; stroke-width: 1.75; stroke-dasharray: 6 4; fill: none; }
+    </style>
+  </defs>
+
+  <!-- Window in which the invariant is broken -->
+  <rect x="6" y="84" width="328" height="278" rx="10" fill="#98482e" fill-opacity="0.06" stroke="#98482e" stroke-width="1" stroke-dasharray="4 4"/>
+  <text class="label" x="20" y="106">invariant broken</text>
+
+  <!-- Normal path -->
+  <rect class="node" x="20" y="14" width="300" height="50" rx="6"/>
+  <text class="title" x="170" y="45" text-anchor="middle">Invariant holds</text>
+
+  <rect class="node" x="20" y="116" width="300" height="64" rx="6"/>
+  <text class="title" x="170" y="142" text-anchor="middle">Break the invariant</text>
+  <text class="sub" x="170" y="166" text-anchor="middle">new Buffer, slots uninitialized</text>
+
+  <rect class="node" x="20" y="200" width="300" height="64" rx="6"/>
+  <text class="title" x="170" y="226" text-anchor="middle">Call code that may panic</text>
+  <text class="sub mono" x="170" y="250" text-anchor="middle">T::clone()</text>
+
+  <rect class="node" x="20" y="284" width="300" height="64" rx="6"/>
+  <text class="title" x="170" y="310" text-anchor="middle">Restore the invariant</text>
+  <text class="sub" x="170" y="334" text-anchor="middle">write the clones</text>
+
+  <rect class="node" x="20" y="384" width="300" height="50" rx="6"/>
+  <text class="title" x="170" y="415" text-anchor="middle">Return, invariant holds</text>
+
+  <g fill="#292b28">
+    <line class="flow" x1="170" y1="64" x2="170" y2="107"/>
+    <path d="M164,106 L176,106 L170,116 z"/>
+    <line class="flow" x1="170" y1="180" x2="170" y2="191"/>
+    <path d="M164,190 L176,190 L170,200 z"/>
+    <line class="flow" x1="170" y1="264" x2="170" y2="275"/>
+    <path d="M164,274 L176,274 L170,284 z"/>
+    <line class="flow" x1="170" y1="348" x2="170" y2="375"/>
+    <path d="M164,374 L176,374 L170,384 z"/>
+  </g>
+
+  <!-- Hidden unwinding path -->
+  <g fill="#98482e">
+    <line class="panic" x1="320" y1="232" x2="350" y2="232"/>
+    <path d="M350,226 L350,238 L360,232 z"/>
+    <line class="panic" x1="475" y1="264" x2="475" y2="290"/>
+    <path d="M469,290 L481,290 L475,300 z"/>
+  </g>
+
+  <rect class="bad" x="360" y="200" width="230" height="64" rx="6"/>
+  <text class="title" x="475" y="226" text-anchor="middle">Panic unwinds</text>
+  <text class="sub" x="475" y="250" text-anchor="middle">restore is skipped</text>
+
+  <rect class="bad" x="360" y="300" width="230" height="104" rx="6"/>
+  <text class="title" x="475" y="328" text-anchor="middle"><tspan class="mono">Buffer::drop</tspan> runs</text>
+  <text class="sub" x="475" y="352" text-anchor="middle">on uninitialized slots</text>
+  <text class="ub" x="475" y="386" text-anchor="middle">undefined behavior</text>
+</svg>

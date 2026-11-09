@@ -3,8 +3,8 @@
   <div class="intro-copy">
     <p class="eyebrow">Research journal</p>
     <h1 id="intro-title">A closer look<br>at what's <span class="forged-word"><span class="forged-accent">FORGE</span>d.</span></h1>
-    <p class="lede">Notes from Microsoft's Frontier Offensive Research &amp;
-      Generative Exploitation Lab.</p>
+    <p class="lede">Notes from&nbsp;&nbsp;<span class="microsoft-name">{{ partial "microsoft-logo.html" . | strings.TrimSpace | safeHTML }}<strong>Microsoft Security</strong>'s</span> <span class="forged-accent">F</span>rontier <span class="forged-accent">O</span>ffensive <span class="forged-accent">R</span>esearch &amp;
+      <span class="forged-accent">G</span>enerative <span class="forged-accent">E</span>xploitation Lab.</p>
   </div>
   {{ $artwork := resources.Get "images/goryeo-forge-cutout.png" }}
   {{ $small := $artwork.Resize "880x webp q85" }}

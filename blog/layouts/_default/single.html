@@ -1,13 +1,28 @@
 {{ define "main" }}
+{{ $artwork := .Params.artwork | default "" }}
+{{ $hasArtwork := eq $artwork "rust-inspection" }}
 <article class="post">
-  <header class="page-heading">
+  <header class="page-heading{{ if $hasArtwork }} page-heading-with-artwork{{ end }}">
     <a class="back-link" href="{{ "posts/" | relURL }}">← All writing</a>
-    <h1>{{ .Title }}</h1>
+    <h1>{{ .Title | markdownify }}</h1>
     <p class="post-meta">
+      {{ with .Params.author }}
+      By {{ with $.Params.author_url }}<a href="{{ . }}">{{ $.Params.author }}</a>{{ else }}{{ . }}{{ end }}
+      <span aria-hidden="true"> / </span>
+      {{ end }}
       <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
       <span aria-hidden="true"> / </span>{{ .ReadingTime }} min read
     </p>
+    {{ if $hasArtwork }}
+    {{ partial (printf "%s.html" $artwork) . }}
+    {{ end }}
   </header>
+  {{ if .Params.toc }}
+  <aside class="toc" aria-labelledby="toc-title">
+    <p class="toc-title" id="toc-title">Contents</p>
+    {{ .TableOfContents }}
+  </aside>
+  {{ end }}
   <div class="prose">{{ .Content }}</div>
 </article>
 {{ end }}
