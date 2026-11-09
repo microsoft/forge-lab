@@ -9,11 +9,14 @@ toc = true
 artwork = "rust-inspection"
 +++
 
-Microsoft's FORGE Lab found several memory-safety bugs in Rust's standard library (`std` and `core`), including cases where code written entirely in safe Rust can trigger undefined behavior. The findings reveal three recurring patterns of misplaced trust in unsafe code: trusting code not to panic, trusting user-provided implementations to be correct, and trusting the underlying system.
+Microsoft's FORGE Lab found several memory safety issues in Rust's standard library (`std` and `core`), including cases where code written entirely in safe Rust can trigger undefined behavior. The research used Hyenas, FORGE's frontier research version of codename MDASH, an AI-powered vulnerability-scanning system. The findings reveal three recurring patterns of misplaced trust in unsafe code: trusting code not to panic, trusting user-provided implementations to be correct, and trusting the underlying system.
 
 Rust's safety guarantees are precisely what make these findings interesting. Its rich type system and ownership model rule out whole classes of memory-safety issues, but much of the standard library relies on unsafe code underneath its safe APIs. When that code breaks its safety contract, even safe Rust can encounter behavior the language is designed to prevent.
 
-That matters more as critical software moves to Rust.
+Rust's memory-safety guarantees are increasingly important as the language
+becomes part of software that billions of people rely on every day. Billions of
+people are estimated to interact with Rust-based software or operating systems
+daily, often without knowing it.
 Microsoft made Rust a
 [Tier-1 internal language](https://rustfoundation.org/media/guest-post-rust-is-tier-1-language-at-microsoft/)
 alongside C++, C#, and TypeScript, GitHub
@@ -22,8 +25,10 @@ and [Bun](https://bun.com/blog/bun-in-rust),
 [Android](https://blog.google/security/rust-in-android-move-fast-fix-things/),
 the [Linux kernel](https://lwn.net/Articles/1050174/), and
 [Cloudflare](https://blog.cloudflare.com/20-percent-internet-upgrade/) are
-moving code to it as well. Almost all of that code builds on the standard
-library and relies on its safe APIs to keep their promises.
+moving code to it as well. Much of this software relies on Rust's foundational
+libraries, `core` and `std`, and the safety guarantees of the APIs they provide.
+Bugs in those libraries can have consequences well beyond the code where they
+originate.
 
 Unsafe Rust has been a long-running interest for us. Our team includes the
 people behind [Rudra](https://dl.acm.org/doi/10.1145/3477132.3483570), a static
@@ -47,8 +52,10 @@ This post focuses on soundness bugs in the standard library's unsafe code. Bugs 
 
 {{< note >}}
 
-**A note on open issues.** Some of the issues in this post are still open at the time of writing. The Rust
-maintainers triaged and responded to our reports quickly, and we believe maintainers
+**A note on open issues.** At publication, two of the issues reported by our team
+remain open. The article also references related issues reported by others and
+fixes that are still under review. The Rust maintainers triaged and responded to
+our reports quickly, and we believe maintainers
 and the contributors working on these issues are doing their best and making
 the right tradeoffs among the many bugs they handle.
 
@@ -380,8 +387,10 @@ and another thread could overwrite the handler's frame, such as its return
 address, while it runs. In practice, the conditions are very tight. Everything
 has to happen in the brief window before libc's `exit` finishes, the new mapping
 must have exactly the right size to reuse that address, and overwriting the
-frame takes a second race inside a short handler. We found no reliable way to
-get a writable mapping of that size, so we judged it unlikely to be exploitable.
+frame takes a second race inside a short handler. For issue #161018, our testing
+found no reliable exploitation path under the conditions examined, and we
+assessed practical exploitation as unlikely. This assessment does not
+automatically apply to the other issues discussed.
 The [issue](https://github.com/rust-lang/rust/issues/161018) has more details in
 its security impact analysis.
 
