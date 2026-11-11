@@ -1,0 +1,6 @@
+{{ $image := .image }}
+{{ if .listing }}{{ $image = $image.Resize "540x webp q85" }}{{ end }}
+<img class="{{ .class }}" src="{{ $image.RelPermalink }}"
+  width="{{ $image.Width }}" height="{{ $image.Height }}"
+  alt="{{ .alt | default "" }}" draggable="false" decoding="async"
+  {{ if .listing }}loading="lazy"{{ end }}>

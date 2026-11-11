@@ -1,7 +1,8 @@
 const landscape = document.querySelector("[data-ink-landscape]");
 
 if (landscape) {
-  const motion = window.matchMedia("(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)");
+  const motion = window.matchMedia("(prefers-reduced-motion: no-preference)");
+  const pointer = window.matchMedia("(hover: hover) and (pointer: fine)");
   const sparkRoot = landscape.querySelector(".forge-burst");
   const particles = [];
   const layers = [...landscape.querySelectorAll("[data-depth]")].map((element) => ({
@@ -15,6 +16,8 @@ if (landscape) {
     y: 0,
   }));
   let ready = false;
+  let inView = false;
+  let blurred = false;
   let targetX = 0;
   let targetY = 0;
   let targetEnergy = 0;
@@ -29,6 +32,10 @@ if (landscape) {
   let strikeArmed = true;
   let previousHammerAngle = 0;
   let flash = 0;
+
+  function enabled() {
+    return ready && motion.matches && !document.hidden && !blurred && inView;
+  }
 
   function strike(strength) {
     if (!sparkRoot) return;
@@ -82,12 +89,16 @@ if (landscape) {
 
   function draw(time) {
     frame = 0;
+    if (!enabled()) {
+      syncMotion();
+      return;
+    }
     const elapsed = previousTime ? Math.min(time - previousTime, 64) : 16;
     previousTime = time;
     phase += elapsed / 1000;
     let settled = true;
     for (const layer of layers) {
-      const easing = 1 - Math.exp(-elapsed / layer.ease);
+      const easing = 1 - Math.exp(-elapsed / (layer.ease * (pointer.matches ? 1 : 0.7)));
       layer.x += (targetX - layer.x) * easing;
       layer.y += (targetY - layer.y) * easing;
       if (Math.abs(targetX - layer.x) + Math.abs(targetY - layer.y) < 0.001) {
@@ -130,12 +141,13 @@ if (landscape) {
   }
 
   function animate() {
-    if (!frame && ready && motion.matches && !document.hidden) {
+    if (!frame && enabled()) {
       frame = requestAnimationFrame(draw);
     }
   }
 
   function reset() {
+    if (!pointer.matches) return;
     pointerActive = strikeArmed = false;
     targetX = targetY = targetEnergy = gust = impulse = 0;
     animate();
@@ -159,11 +171,23 @@ if (landscape) {
     landscape.style.removeProperty("--forge-flicker");
     landscape.style.removeProperty("--forge-lift");
     landscape.style.removeProperty("--forge-strike");
-    landscape.dataset.layered = String(ready && motion.matches && !document.hidden);
+    landscape.dataset.layered = String(enabled());
+    followScroll();
+  }
+
+  function followScroll() {
+    if (!enabled() || pointer.matches) return;
+    const bounds = landscape.getBoundingClientRect();
+    targetY = Math.max(-1, Math.min(1, 1.5 - 3 * (bounds.top + bounds.height / 2) / window.innerHeight));
+    targetX = 0;
+    targetEnergy = 0.25 + Math.abs(targetY) * 0.4;
+    pointerActive = true;
+    if (previousHammerAngle <= 0) strikeArmed = true;
+    animate();
   }
 
   landscape.addEventListener("pointermove", (event) => {
-    if (!ready || !motion.matches || event.pointerType === "touch") return;
+    if (!enabled() || !pointer.matches || event.pointerType === "touch") return;
     const bounds = landscape.getBoundingClientRect();
     if (!bounds.width || !bounds.height) return;
     pointerActive = true;
@@ -179,10 +203,18 @@ if (landscape) {
   });
   landscape.addEventListener("pointerleave", reset);
   landscape.addEventListener("pointercancel", reset);
-  window.addEventListener("blur", reset);
-  window.addEventListener("resize", reset);
+  window.addEventListener("scroll", followScroll, { passive: true });
+  window.addEventListener("blur", () => { blurred = true; syncMotion(); });
+  window.addEventListener("focus", () => { blurred = false; syncMotion(); });
+  window.addEventListener("resize", syncMotion);
   document.addEventListener("visibilitychange", syncMotion);
   motion.addEventListener("change", syncMotion);
+  pointer.addEventListener("change", syncMotion);
+  const observer = new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting;
+    syncMotion();
+  });
+  observer.observe(landscape);
   syncMotion();
 
   // Keep the intact painting visible until every cutout can be composited.

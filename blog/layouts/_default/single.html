@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ $artwork := .Params.artwork | default "" }}
-{{ $hasArtwork := eq $artwork "rust-inspection" }}
-<article class="post">
+{{ $hasArtwork := in (slice "rust-inspection" "kernel-repair") $artwork }}
+<article class="post" data-slug="{{ .Slug }}">
   <header class="page-heading{{ if $hasArtwork }} page-heading-with-artwork{{ end }}">
     <a class="back-link" href="{{ "posts/" | relURL }}">← All writings</a>
     <h1>{{ .Title | markdownify }}</h1>
@@ -14,7 +14,7 @@
       <span aria-hidden="true"> / </span>{{ .ReadingTime }} min read
     </p>
     {{ if $hasArtwork }}
-    {{ partial (printf "%s.html" $artwork) . }}
+    {{ partial (printf "%s.html" $artwork) (dict "page" .) }}
     {{ end }}
   </header>
   {{ if .Params.toc }}

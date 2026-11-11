@@ -1,18 +1,15 @@
-<figure class="post-artwork rust-inspection" data-rust-inspection>
-  <img class="rust-inspection-still" src="{{ (.Resources.Get "cover.webp").RelPermalink }}"
-    width="1536" height="1024"
-    alt="An artisan inspecting a hairline crack in a forged iron ring with a fine metal pick.">
+{{ $page := .page }}
+{{ $listing := .listing | default false }}
+{{ $alt := "An artisan inspecting a hairline crack in a forged iron ring with a fine metal pick." }}
+{{ if $listing }}{{ $alt = "" }}{{ end }}
+<figure class="{{ if $listing }}post-list-artwork{{ else }}post-artwork{{ end }} rust-inspection" data-rust-inspection>
+  {{ partial "artwork-image.html" (dict "image" ($page.Resources.Get "cover.webp") "class" "rust-inspection-still" "listing" $listing "alt" $alt) }}
   <div class="rust-inspection-layers" aria-hidden="true">
-    <img class="rust-inspection-base" src="{{ (.Resources.Get "cover-base.webp").RelPermalink }}"
-      width="1536" height="1024" alt="" draggable="false">
+    {{ partial "artwork-image.html" (dict "image" ($page.Resources.Get "cover-base.webp") "class" "rust-inspection-base" "listing" $listing) }}
     {{ $crack := resources.Get "images/covers/rust-std-memory-safety/crack.svg" }}
     {{ $crack.Content | safeHTML }}
     {{ range slice "head" "hand" }}
-    <img class="rust-inspection-{{ . }}"
-      src="{{ ($.Resources.Get (printf "cover-%s.webp" .)).RelPermalink }}"
-      width="1536" height="1024" alt="" draggable="false">
+    {{ partial "artwork-image.html" (dict "image" ($page.Resources.Get (printf "cover-%s.webp" .)) "class" (printf "rust-inspection-%s" .) "listing" $listing) }}
     {{ end }}
   </div>
 </figure>
-{{ $motion := resources.Get "js/rust-inspection.js" | minify | fingerprint }}
-<script src="{{ $motion.RelPermalink }}" integrity="{{ $motion.Data.Integrity }}" defer></script>

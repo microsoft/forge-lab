@@ -1,11 +1,27 @@
 <ul class="post-list">
-  {{ range .ByDate.Reverse }}
-  <li>
+  {{ range .posts.ByDate.Reverse }}
+  {{ $cover := false }}
+  {{ if $.showArtwork }}{{ $cover = .Resources.Get "cover.webp" }}{{ end }}
+  <li{{ if $cover }} class="post-list-with-artwork"{{ end }}>
     <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
-    <div>
+    <div class="post-list-copy">
       <h2><a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a></h2>
       {{ with .Description }}<p>{{ . }}</p>{{ end }}
     </div>
+    {{ if and $cover (in (slice "rust-inspection" "kernel-repair") .Params.artwork) }}
+    {{ partial (printf "%s.html" .Params.artwork) (dict "page" . "listing" true) }}
+    {{ else }}
+    {{ with $cover }}
+    {{ $small := .Resize "360x webp q85" }}
+    {{ $large := .Resize "540x webp q85" }}
+    <img class="post-list-artwork"
+      src="{{ $small.RelPermalink }}"
+      srcset="{{ $small.RelPermalink }} {{ $small.Width }}w, {{ $large.RelPermalink }} {{ $large.Width }}w"
+      sizes="(max-width: 600px) min(60vw - 29px, 200px), (max-width: 760px) clamp(80px, 24vw, 140px), 180px"
+      width="{{ $small.Width }}" height="{{ $small.Height }}"
+      alt="" loading="lazy" decoding="async">
+    {{ end }}
+    {{ end }}
   </li>
   {{ else }}
   <li><p>Research notes are on the way.</p></li>

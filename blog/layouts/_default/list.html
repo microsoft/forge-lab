@@ -3,5 +3,5 @@
   <p class="eyebrow">The journal</p>
   <h1>{{ .Title }}</h1>
 </header>
-{{ partial "post-list.html" .RegularPages }}
+{{ partial "post-list.html" (dict "posts" .RegularPages "showArtwork" (eq .Section "posts")) }}
 {{ end }}

@@ -1,0 +1,12 @@
+{{ $page := .page }}
+{{ $listing := .listing | default false }}
+{{ $alt := "An artisan using a chisel to fit a replacement piece into a wooden lattice joint." }}
+{{ if $listing }}{{ $alt = "" }}{{ end }}
+<figure class="{{ if $listing }}post-list-artwork{{ else }}post-artwork{{ end }} kernel-repair" data-kernel-repair>
+  {{ partial "artwork-image.html" (dict "image" ($page.Resources.Get "cover.webp") "class" "kernel-repair-still" "listing" $listing "alt" $alt) }}
+  <div class="kernel-repair-layers" aria-hidden="true">
+    {{ range slice "base" "head" "forearm" "hand" }}
+    {{ partial "artwork-image.html" (dict "image" ($page.Resources.Get (printf "cover-%s.webp" .)) "class" (printf "kernel-repair-%s" .) "listing" $listing) }}
+    {{ end }}
+  </div>
+</figure>

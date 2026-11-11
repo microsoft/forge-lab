@@ -15,9 +15,19 @@
     <link rel="preload" href="{{ "fonts/literata-latin-opsz-normal.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
     {{ $style := resources.Get "css/main.css" | minify | fingerprint }}
     <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
-    {{ if eq .Params.artwork "rust-inspection" }}
-    {{ $coverStyle := resources.Get "css/rust-inspection.css" | minify | fingerprint }}
+    {{ $artworks := slice (.Params.artwork | default "") }}
+    {{ if and .IsSection (eq .Section "posts") }}
+      {{ range .RegularPages }}
+        {{ $artworks = $artworks | append (.Params.artwork | default "") }}
+      {{ end }}
+    {{ end }}
+    {{ range $artworks | uniq }}
+    {{ if in (slice "rust-inspection" "kernel-repair") . }}
+    {{ $coverStyle := resources.Get (printf "css/%s.css" .) | minify | fingerprint }}
     <link rel="stylesheet" href="{{ $coverStyle.RelPermalink }}" integrity="{{ $coverStyle.Data.Integrity }}">
+    {{ $motion := resources.Get (printf "js/%s.js" .) | minify | fingerprint }}
+    <script src="{{ $motion.RelPermalink }}" integrity="{{ $motion.Data.Integrity }}" defer></script>
+    {{ end }}
     {{ end }}
   </head>
   <body>
@@ -42,5 +52,8 @@
         </div>
       </footer>
     </div>
+    <template id="microsoft-logo-template">{{ partial "microsoft-logo.html" . }}</template>
+    {{ $wordmarks := resources.Get "js/brand-wordmarks.js" | minify | fingerprint }}
+    <script src="{{ $wordmarks.RelPermalink }}" integrity="{{ $wordmarks.Data.Integrity }}" defer></script>
   </body>
 </html>

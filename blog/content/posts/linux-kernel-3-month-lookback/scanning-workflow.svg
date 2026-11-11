@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="330" viewBox="0 0 640 330" role="img" aria-labelledby="funnel-title funnel-description">
+  <title id="funnel-title">From raw findings to public upstream reports</title>
+  <desc id="funnel-description">The workflow produced 26,502 raw scan findings, 11,769 screened candidates, 621 cases with PoC evidence and 59 upstream reports. Of the screened candidates, 10,842 entered proving. Below each stage are rounded pipeline token totals: scanning 33.25 billion tokens; static screening (confidence validation and Linux-aware filtering) 5.60 billion tokens; PoC work including setup 42.68 billion tokens. The human review and patching phase is estimated at 2+ months with one FTE and one intern, within an overall effort of about three months. Case records and public report threads are different units; shapes are illustrative, not proportional to counts.</desc>
+  <defs>
+    <marker id="funnel-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L7 3.5L0 7Z" fill="#65665e"/>
+    </marker>
+  </defs>
+  <g font-family="system-ui, sans-serif" text-anchor="middle" fill="#292b28">
+    <path d="M4 10L140 22V170L4 182Z" fill="#efede5" stroke="#bdb9ac"/>
+    <path d="M172 22L308 34V158L172 170Z" fill="#e7e1d7" stroke="#bdb9ac"/>
+    <path d="M340 34L476 46V146L340 158Z" fill="#d9c2b0" stroke="#bdb9ac"/>
+    <path d="M508 46L636 58V134L508 146Z" fill="#98482e"/>
+    <g stroke="#65665e" stroke-width="1.5" fill="none" marker-end="url(#funnel-arrow)">
+      <path d="M146 96H165"/>
+      <path d="M314 96H333"/>
+      <path d="M482 96H501"/>
+    </g>
+
+    <text x="72" y="82" font-size="30" font-weight="650" data-count="26502">26,502</text>
+    <text x="72" y="109" font-size="14">
+      <tspan x="72">Raw scan</tspan>
+      <tspan x="72" dy="18">findings</tspan>
+    </text>
+
+    <text x="240" y="82" font-size="30" font-weight="650" data-count="11769">11,769</text>
+    <text x="240" y="109" font-size="14">
+      <tspan x="240">Candidates for</tspan>
+      <tspan x="240" dy="18">proving</tspan>
+    </text>
+
+    <text x="408" y="82" font-size="30" font-weight="650" data-count="621">621</text>
+    <text x="408" y="109" font-size="14">
+      <tspan x="408">Cases with</tspan>
+      <tspan x="408" dy="18">PoC evidence</tspan>
+    </text>
+
+    <text x="572" y="82" font-size="30" font-weight="650" fill="#f7f5ef" data-count="59">59</text>
+    <text x="572" y="109" font-size="14" fill="#f7f5ef">
+      <tspan x="572">Upstream</tspan>
+      <tspan x="572" dy="18">reports</tspan>
+    </text>
+
+    <path d="M4 194H636" stroke="#d4d0c4" stroke-width="1"/>
+    <g data-stage="scan-pipeline" data-tokens="33245775563">
+      <text x="72" y="215" font-size="14" fill="#65665e">Scan pipeline</text>
+      <text x="72" y="238" font-size="14">33.25B tokens</text>
+      <g font-size="14" fill="#65665e">
+        <text x="72" y="267">Sonnet 4.6</text>
+        <text x="72" y="289">GPT-5.4 / GPT-5.5</text>
+        <text x="72" y="311">Opus 4.6 / 4.8</text>
+      </g>
+    </g>
+    <g data-stage="static-screening" data-tokens="5601210429">
+      <text x="240" y="215" font-size="14" fill="#65665e">Static screening</text>
+      <text x="240" y="238" font-size="14">5.60B tokens</text>
+      <g font-size="14" fill="#65665e">
+        <text x="240" y="267">GPT-5.4 / GPT-5.5</text>
+        <text x="240" y="289">GPT-5.5-cyber</text>
+        <text x="240" y="311">Opus 4.6 / 4.8</text>
+      </g>
+    </g>
+    <g data-stage="poc-pipeline" data-tokens="42677039099">
+      <text x="408" y="215" font-size="14" fill="#65665e">PoC pipeline</text>
+      <text x="408" y="238" font-size="14">42.68B tokens</text>
+      <g font-size="14" fill="#65665e">
+        <text x="408" y="267">GPT-5.5</text>
+        <text x="408" y="289">Opus 4.6</text>
+        <text x="408" y="311">GPT-5.5-cyber</text>
+      </g>
+    </g>
+    <g data-stage="human" data-fte="1" data-interns="1" data-months-min="2">
+      <text x="572" y="215" font-size="14" fill="#65665e">Human effort</text>
+      <text x="572" y="238" font-size="14">2+ months</text>
+      <g font-size="14" fill="#65665e">
+        <text x="572" y="267">1 FTE + 1 intern</text>
+        <text x="572" y="289">Review + patching</text>
+      </g>
+    </g>
+  </g>
+</svg>

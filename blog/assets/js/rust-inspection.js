@@ -17,9 +17,10 @@ for (const artwork of document.querySelectorAll("[data-rust-inspection]")) {
   let progress = 0;
   let frame = 0;
   let previousTime = 0;
+  let blurred = false;
 
   function enabled() {
-    return ready && motion.matches && pointer.matches && !document.hidden && inView;
+    return ready && motion.matches && !document.hidden && !blurred && inView;
   }
 
   function paint() {
@@ -39,7 +40,7 @@ for (const artwork of document.querySelectorAll("[data-rust-inspection]")) {
     }
     const elapsed = previousTime ? Math.min(time - previousTime, 64) : 16;
     previousTime = time;
-    progress += (target - progress) * (1 - Math.exp(-elapsed / 140));
+    progress += (target - progress) * (1 - Math.exp(-elapsed / (pointer.matches ? 140 : 90)));
     const settled = Math.abs(target - progress) < 0.0005;
     if (settled) progress = target;
     paint();
@@ -52,6 +53,7 @@ for (const artwork of document.querySelectorAll("[data-rust-inspection]")) {
   }
 
   function reset() {
+    if (!pointer.matches) return;
     target = 0;
     artwork.removeAttribute("data-inspecting");
     animate();
@@ -64,10 +66,11 @@ for (const artwork of document.querySelectorAll("[data-rust-inspection]")) {
     head.style.removeProperty("transform");
     artwork.removeAttribute("data-inspecting");
     artwork.toggleAttribute("data-layered", enabled());
+    followScroll();
   }
 
   function follow(event) {
-    if (!enabled() || event.pointerType === "touch") return;
+    if (!enabled() || !pointer.matches || event.pointerType === "touch") return;
     const bounds = artwork.getBoundingClientRect();
     if (!bounds.width || !bounds.height) return;
     const x = (event.clientX - bounds.left) / bounds.width * 1536;
@@ -79,11 +82,20 @@ for (const artwork of document.querySelectorAll("[data-rust-inspection]")) {
     animate();
   }
 
+  function followScroll() {
+    if (!enabled() || pointer.matches) return;
+    const bounds = artwork.getBoundingClientRect();
+    target = Math.max(0, Math.min(1, 1.25 - 1.5 * (bounds.top + bounds.height / 2) / window.innerHeight));
+    animate();
+  }
+
   artwork.addEventListener("pointerenter", follow);
   artwork.addEventListener("pointermove", follow);
   artwork.addEventListener("pointerleave", reset);
   artwork.addEventListener("pointercancel", reset);
-  window.addEventListener("blur", sync);
+  window.addEventListener("scroll", followScroll, { passive: true });
+  window.addEventListener("blur", () => { blurred = true; sync(); });
+  window.addEventListener("focus", () => { blurred = false; sync(); });
   window.addEventListener("resize", sync);
   document.addEventListener("visibilitychange", sync);
   motion.addEventListener("change", sync);

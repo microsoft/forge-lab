@@ -14,7 +14,7 @@
 .rust-inspection-head { transform-origin: 40% 36%; }
 .rust-inspection-hand { transform-origin: 19.8567708333% 69.3359375%; }
 
-@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+@media (prefers-reduced-motion: no-preference) {
   .rust-inspection[data-layered] .rust-inspection-still { visibility: hidden; }
   .rust-inspection[data-layered] .rust-inspection-layers { visibility: visible; }
 }
