@@ -3,7 +3,7 @@
 {{ $hasArtwork := eq $artwork "rust-inspection" }}
 <article class="post">
   <header class="page-heading{{ if $hasArtwork }} page-heading-with-artwork{{ end }}">
-    <a class="back-link" href="{{ "posts/" | relURL }}">← All writing</a>
+    <a class="back-link" href="{{ "posts/" | relURL }}">← All writings</a>
     <h1>{{ .Title | markdownify }}</h1>
     <p class="post-meta">
       {{ with .Params.author }}
