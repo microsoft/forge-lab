@@ -106,3 +106,26 @@ rebuilds.
 3. Check the post at desktop and narrow mobile widths.
 4. Commit only the post bundle and any intentional asset changes. Do not
    commit the generated `public/` or `resources/` directories.
+
+## Pageview analytics
+
+Production builds track the homepage, writing index, and published articles with
+Azure Application Insights (`appi-forge-blog`). Local Hugo servers, development
+builds, and drafts do not include analytics. Copies served on a different origin
+do not send telemetry.
+Disable collection by setting `params.analytics.enabled = false` in `hugo.toml`.
+The instrumentation key is a public ingestion identifier, not an Azure credential.
+
+The small sender posts [Application Insights pageview telemetry](https://learn.microsoft.com/azure/azure-monitor/app/data-model-complete#page-view-telemetry)
+directly to the resource's `/v2/track` endpoint, without loading the SDK or touching
+cookies or browser storage. It uses credential-free `fetch`, respects Do Not Track
+and Global Privacy Control, strips query strings and fragments from page URLs,
+and limits referrers to their origins. No user or session identifiers are sent.
+Only pageviews are collected; unique-visitor and cross-page session counts are
+not available. Delivery is best-effort, without retries or persistent buffering.
+
+The footer links to `/privacy/`. This configuration is not a determination that
+analytics is consent-exempt; organizational privacy requirements still apply.
+Changes are not live until released through the normal blog publishing process.
+
+Run the analytics regression tests with `node --test tests/analytics.test.mjs`.

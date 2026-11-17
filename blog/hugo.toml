@@ -7,5 +7,10 @@ enableRobotsTXT = true
 [params]
 description = "Research notes from Microsoft's Frontier Offensive Research & Generative Exploitation Lab."
 
+[params.analytics]
+enabled = true
+instrumentation_key = "5449b696-c544-491e-ae84-81ae961c78bf"
+ingestion_endpoint = "https://eastus-8.in.applicationinsights.azure.com/"
+
 [permalinks]
 posts = "/posts/:slug/"

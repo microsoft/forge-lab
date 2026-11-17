@@ -1,0 +1,8 @@
+{{ if and hugo.IsProduction (not hugo.IsServer) (not .Draft) (or .IsHome (eq .Section "posts")) }}
+  {{ with site.Params.analytics }}
+    {{ if and .enabled .instrumentation_key .ingestion_endpoint }}
+    {{ $analytics := resources.Get "js/analytics.js" | minify | fingerprint }}
+    <script src="{{ $analytics.RelPermalink }}" integrity="{{ $analytics.Data.Integrity }}" data-instrumentation-key="{{ .instrumentation_key }}" data-ingestion-endpoint="{{ .ingestion_endpoint }}" data-site-url="{{ site.BaseURL }}" data-page-url="{{ $.Permalink }}" defer></script>
+    {{ end }}
+  {{ end }}
+{{ end }}

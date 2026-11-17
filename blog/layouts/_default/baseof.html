@@ -47,6 +47,7 @@
       <footer class="site-footer">
         <span>FORGE Lab <span aria-hidden="true">·</span> Microsoft Security</span>
         <div>
+          <a href="{{ "privacy/" | relURL }}">Privacy</a>
           <a href="https://github.com/microsoft/forge-lab/blob/main/LICENSE">CC BY 4.0</a>
           {{ with site.Home.OutputFormats.Get "RSS" }}<a href="{{ .RelPermalink }}">RSS</a>{{ end }}
         </div>
@@ -55,5 +56,6 @@
     <template id="microsoft-logo-template">{{ partial "microsoft-logo.html" . }}</template>
     {{ $wordmarks := resources.Get "js/brand-wordmarks.js" | minify | fingerprint }}
     <script src="{{ $wordmarks.RelPermalink }}" integrity="{{ $wordmarks.Data.Integrity }}" defer></script>
+    {{ partial "analytics.html" . }}
   </body>
 </html>
